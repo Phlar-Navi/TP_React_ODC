@@ -1,43 +1,27 @@
 import axios from "axios";
 import { useState } from 'react';
+import { useParams } from "react-router";
+import { useEffect } from "react";
 
-const Create = () => {
+const Modify = ({ logement: logementProp }) => {
+
+    // var params = useParams();
+    const { id } = useParams();
+    const [logement, setLogement] = useState(logementProp || {});
 
     const [formdata, setformdata] = useState({bedrooms: 0, kitchens: 0, living_rooms: 0, toilets: 0, price: 0, address: "", type: "", status: ""}); //gerer les donnes du formulaire
-    //const [listeInscription, setlisteInscription] = useState([]); //liste des utilisateurs a update a chaque ajout
+    
+    console.log(logement);
 
-    // const handleSubmit = (event) => { // Pour gerer le formulaire d'envoi
-    //     event.preventDefault();
-    //     // let nom = formdata.name;
-
-    //     if(formdata.bedrooms && formdata.kitchens && formdata.living_rooms && formdata.toilets && formdata.price && formdata.address) {
-    //         let datas = formdata;
-    //         //setformdata({name:"", prenom:"", email:""});
-
-    //         axios.post('https://real-estate-api-64hf.onrender.com/api/properties', {
-    //             address: formdata.address,
-    //             bedrooms: formdata.bedrooms,
-    //             kitchens: formdata.kitchens,
-    //             living_rooms: formdata.living_rooms,
-    //             price: formdata.price,
-    //             status: formdata.status,
-    //             toilets: formdata.toilets,
-    //             type: formdata.type,
-    //             id: 4,
-    //             created_at: "2025-02-18T17:13:49.040Z"
-    //           })
-    //           .then(function (response) {
-    //             console.log(response);
-    //           })
-    //           .catch(function (error) {
-    //             console.log(error);
-    //           });
-
-    //     } else {
-    //         alert("Message d'erreur");
-    //     }
-    // }
-
+    useEffect(() => {
+        axios.get(`https://real-estate-api-64hf.onrender.com/api/properties/${id}`).then((response) => {
+          setTimeout(() => setLogement(response.data), 1000);
+          console.log(response.data);
+        }).catch((error) => {
+          console.log(error);
+        });
+    }, [id]);
+    
     const handleSubmit = async (event) => {
         event.preventDefault(); // Empêche le rechargement de la page
     
@@ -103,7 +87,7 @@ const Create = () => {
                 <div className="row justify-content-center">
                     <div className="col-lg-8 col-md-10 col-sm-12">
                         <form onSubmit={handleSubmit} style={{ padding: "30px", border: "1px solid #ddd", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-                            <h2 className="text-center mb-4">Formulaire d'enregistrement</h2>
+                            <h2 className="text-center mb-4">Formulaire de Modification</h2>
 
                             <div className="row">
                                 <div className="col-md-6 mb-3">
@@ -117,32 +101,32 @@ const Create = () => {
 
                                 <div className="col-md-6 mb-3">
                                     <label className="form-label">Nombre de chambres</label>
-                                    <input type="number" name="bedrooms" className="form-control" onChange={handleChange}/>
+                                    <input type="number" placeholder={logement.bedrooms} name="bedrooms" className="form-control" onChange={handleChange}/>
                                 </div>
 
                                 <div className="col-md-6 mb-3">
                                     <label className="form-label">Nombre de cuisines</label>
-                                    <input type="number" name="kitchens" className="form-control" onChange={handleChange}/>
+                                    <input type="number" placeholder={logement.kitchens} name="kitchens" className="form-control" onChange={handleChange}/>
                                 </div>
 
                                 <div className="col-md-6 mb-3">
                                     <label className="form-label">Nombre de salons</label>
-                                    <input type="number" name="living_rooms" className="form-control" onChange={handleChange}/>
+                                    <input type="number" placeholder={logement.living_rooms} name="living_rooms" className="form-control" onChange={handleChange}/>
                                 </div>
 
                                 <div className="col-md-6 mb-3">
                                     <label className="form-label">Nombre de toilettes</label>
-                                    <input type="number" name="toilets" className="form-control" onChange={handleChange}/>
+                                    <input type="number" placeholder={logement.toilets} name="toilets" className="form-control" onChange={handleChange}/>
                                 </div>
 
                                 <div className="col-md-6 mb-3">
                                     <label className="form-label">Prix</label>
-                                    <input type="number" name="price" className="form-control" onChange={handleChange}/>
+                                    <input type="number" placeholder={logement.price} name="price" className="form-control" onChange={handleChange}/>
                                 </div>
 
                                 <div className="col-12 mb-3">
                                     <label className="form-label">Adresse</label>
-                                    <input type="text" name="address" className="form-control" onChange={handleChange}/>
+                                    <input type="text" placeholder={logement.address} name="address" className="form-control" onChange={handleChange}/>
                                 </div>
 
                                 <div className="col-md-6 mb-3">
@@ -168,4 +152,4 @@ const Create = () => {
     )
 };
 
-export default Create;
+export default Modify;

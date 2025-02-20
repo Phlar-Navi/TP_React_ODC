@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import Logement from "./logement";
 import axios from "axios";
+import { createContext } from "react";
+import { AppContext } from "../App";
+import { Link } from "react-router";
+import house from "../assets/maison.jpg";
 
 export default function Logements() {
 
@@ -50,7 +54,41 @@ export default function Logements() {
             adresse: "Lubumbashi"
         }
     ]);
+
+    const appContext = useContext(AppContext);
+    console.log(appContext);
+
+    const Calculation = () => {
+        if (!listeLogements || listeLogements.length === 0) {
+            alert("Aucun logement disponible.");
+            return;
+        }
+
+        let total = 0;
+        
+
+        listeLogements.map((data) => {
+            data.price = parseFloat(data.price)
+        })
+        listeLogements.forEach((value) => {
+            //let beta = parseFloat(value);
+            total += value.price;
+        });
+
+        return total;
+        //const val_int = Math.floor(total);
+
+        //alert(`Le prix total est ${total} €`);
+    }
+
     const [dataLoaded, setDataLoaded] = useState(false);
+
+    const totalPrice = useMemo( () => {
+        let sum = Calculation();
+        console.log(sum);
+        return sum;
+    }, [dataLoaded]); //Seulement si l'un des elements en crochet change,
+                                                                                    //la fonction Calculation sera re appelee
 
     // const logementsDispos = (critera) => {
     //     let cmpt = 0;
@@ -107,58 +145,97 @@ export default function Logements() {
         }
     });
 
+    const Delete = (index) => {
+        axios.delete(`https://real-estate-api-64hf.onrender.com/api/properties/${index}`)
+        .then(response => {
+            alert(`Logement d'identifiant ${index} supprime avec succes`);
+        })
+        .catch(error => {
+            console.error(error);
+        })
+    }
+
+
+
     return (
         <>
-            <div className="table-responsive">
-                <table className="table table-dark table-striped table-hover w-100">
-                    <thead>
-                        <tr>
-                            <th scope="col">Type</th>
-                            <th scope="col">Prix</th>
-                            <th scope="col">Adresse</th>
-                            <th scope="col">Statut</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            !dataLoaded ?
-                            <>
-                                <tr className="bg-danger">
-                                    <td colSpan={5} className="text-center text-danger">
-                                        Chargement...
-                                    </td> 
-                                </tr>
-                            </> :
-                            <>
-                            {listeLogements.length === 0 ? (
-                                <tr>
-                                    <td colSpan={5} className="text-center text-danger">
-                                        Pas d'élément dans notre tableau
-                                    </td>
-                                </tr>
-                            ) : (
-                                listeLogements.map((data, index) => (
-                                    <tr key={index}>
-                                        <td>{data.type}</td>
-                                        <td>{data.price} €</td> {/* Ajout du symbole € pour plus de clarté */}
-                                        <td>{data.address}</td>
-                                        <td>
-                                            <span className={`badge ${data.status === 'available' ? 'bg-success' : 'bg-danger'}`}>
-                                                {data.status}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <input type="checkbox" className="form-check-input" />
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                            </>
-                        }
-                    </tbody>
-                </table>
+            <div className="container mt-4">
+                <div className="alert alert-success fw-bold text-center">
+                    Prix Total : {totalPrice} €
+                </div>
+
+                <div className="row">
+                    {!dataLoaded ? (
+                    <div className="text-center text-warning">
+                        <div className="spinner-border text-warning" role="status">
+                        <span className="visually-hidden">Chargement...</span>
+                        </div>
+                        <span className="ms-2">Chargement en cours...</span>
+                    </div>
+                    ) : listeLogements.length === 0 ? (
+                    <div className="text-center text-danger">
+                        Pas d'élément dans notre liste
+                    </div>
+                    ) : (
+                    listeLogements.map((data, index) => (
+                        <div key={index} className="col-md-6 col-lg-4 mb-4">
+                            <div className="card shadow-lg border-0">
+                                <div className="row g-0">
+                                <div className="col-4">
+                                    <img
+                                    src={house}
+                                    className="img-fluid rounded-start"
+                                    alt={data.type}
+                                    style={{ height: "100%", objectFit: "cover" }}
+                                    />
+                                </div>
+
+                                <div className="col-8 d-flex flex-column justify-content-center p-3">
+                                    <h5 className="fw-bold">{data.type}</h5>
+                                    <p className="text-muted mb-1">
+                                    <i className="bi bi-geo-alt"></i> {data.address}
+                                    </p>
+                                    <p className="fw-bold text-success">{data.price} €</p>
+                                    
+                                    <span className={`badge 
+                                    ${data.status === "available" ? "bg-success" : 
+                                    data.status === "under construction" ? "bg-warning" : 
+                                    "bg-danger"} 
+                                    `}>
+                                    {data.status}
+                                    </span>
+
+                                    <div className="mt-3">
+                                    <Link to={`details/${data.id}`}>
+                                        <button className="btn btn-primary btn-sm me-2">
+                                        <i className="bi bi-eye"></i> Voir
+                                        </button>
+                                    </Link>
+                                    <Link to={`modify/${data.id}`}>
+                                        <button className="btn btn-warning btn-sm me-2">
+                                        <i className="bi bi-eye"></i> Modifier
+                                        </button>
+                                    </Link>
+                                    <button
+                                        onClick={() => {
+                                            if (confirm("Etes vous sûr de vouloir supprimer cet élément ?")) {
+                                                Delete(data.id);
+                                            }
+                                        }}
+                                        className="btn btn-outline-danger btn-sm"
+                                    >
+                                        <i className="bi bi-trash"></i> Supprimer
+                                    </button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                    )}
+                </div>
             </div>
+
         </>
     );
     
