@@ -158,9 +158,9 @@ export default function Logements() {
 
 
     return (
-        <>
+        <div style={{ marginTop: "150px" }}>
             <div className="container mt-4">
-                <div className="alert alert-success fw-bold text-center pt-5">
+                <div className="alert alert-success fw-bold text-center">
                     Prix Total : {totalPrice} €
                 </div>
 
@@ -237,7 +237,7 @@ export default function Logements() {
                 </div>
             </div>
 
-        </>
+        </div>
     );
     
 }

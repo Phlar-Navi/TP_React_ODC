@@ -50,7 +50,7 @@ const Modify = ({ logement: logementProp }) => {
     
         try {
             // Envoi des données via Axios
-            const response = await axios.post('https://real-estate-api-64hf.onrender.com/api/properties', payload);
+            const response = await axios.put('https://real-estate-api-64hf.onrender.com/api/properties',payload);
             console.log("Réponse du serveur :", response.data);
     
             // Réinitialisation du formulaire après un envoi réussi
@@ -82,17 +82,27 @@ const Modify = ({ logement: logementProp }) => {
 
 
     return(
-        <>
-           <div className="container-fluid">
+        <div style={{ marginTop: "130px", marginBottom: "80px" }}>
+            <div className="container">
                 <div className="row justify-content-center">
                     <div className="col-lg-8 col-md-10 col-sm-12">
-                        <form onSubmit={handleSubmit} style={{ padding: "30px", border: "1px solid #ddd", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-                            <h2 className="text-center mb-4">Formulaire de Modification</h2>
+                        <form 
+                            onSubmit={handleSubmit} 
+                            style={{ 
+                                padding: "40px", 
+                                borderRadius: "15px", 
+                                boxShadow: "0 10px 25px rgba(0, 0, 0, 0.15)", 
+                                backgroundColor: "#70726E", 
+                                transition: "transform 0.2s ease-in-out"
+                            }} 
+                            className="form-container bg-dark"
+                        >
+                            <h2 className="text-center mb-4" style={{ fontWeight: "bold", color: "#FFFFFF" }}>Formulaire de modification</h2>
 
                             <div className="row">
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">Type</label>
-                                    <select className="form-select" name="type" onChange={handleChange}>
+                                    <label className="form-label fw-semibold">Type</label>
+                                    <select className="form-select rounded-pill" name="type" onChange={handleChange}>
                                         <option value="appartement">Appartement</option>
                                         <option value="villa">Villa</option>
                                         <option value="house">Maison</option>
@@ -100,38 +110,38 @@ const Modify = ({ logement: logementProp }) => {
                                 </div>
 
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">Nombre de chambres</label>
-                                    <input type="number" placeholder={logement.bedrooms} name="bedrooms" className="form-control" onChange={handleChange}/>
+                                    <label className="form-label fw-semibold">Nombre de chambres</label>
+                                    <input type="number" name="bedrooms" defaultValue={logement.bedrooms} className="form-control rounded-pill" onChange={handleChange} />
                                 </div>
 
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">Nombre de cuisines</label>
-                                    <input type="number" placeholder={logement.kitchens} name="kitchens" className="form-control" onChange={handleChange}/>
+                                    <label className="form-label fw-semibold">Nombre de cuisines</label>
+                                    <input type="number" name="kitchens" defaultValue={logement.kitchens} className="form-control rounded-pill" onChange={handleChange} />
                                 </div>
 
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">Nombre de salons</label>
-                                    <input type="number" placeholder={logement.living_rooms} name="living_rooms" className="form-control" onChange={handleChange}/>
+                                    <label className="form-label fw-semibold">Nombre de salons</label>
+                                    <input type="number" name="living_rooms" defaultValue={logement.living_rooms} className="form-control rounded-pill" onChange={handleChange} />
                                 </div>
 
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">Nombre de toilettes</label>
-                                    <input type="number" placeholder={logement.toilets} name="toilets" className="form-control" onChange={handleChange}/>
+                                    <label className="form-label fw-semibold">Nombre de toilettes</label>
+                                    <input type="number" name="toilets" defaultValue={logement.toilets} className="form-control rounded-pill" onChange={handleChange} />
                                 </div>
 
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">Prix</label>
-                                    <input type="number" placeholder={logement.price} name="price" className="form-control" onChange={handleChange}/>
+                                    <label className="form-label fw-semibold">Prix</label>
+                                    <input type="number" name="price" defaultValue={logement.price} className="form-control rounded-pill" onChange={handleChange} />
                                 </div>
 
                                 <div className="col-12 mb-3">
-                                    <label className="form-label">Adresse</label>
-                                    <input type="text" placeholder={logement.address} name="address" className="form-control" onChange={handleChange}/>
+                                    <label className="form-label fw-semibold">Adresse</label>
+                                    <input type="text" name="address" defaultValue={logement.address} className="form-control rounded-pill" onChange={handleChange} />
                                 </div>
 
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">Statut</label>
-                                    <select name="status" className="form-select" onChange={handleChange}>
+                                    <label className="form-label fw-semibold">Statut</label>
+                                    <select name="status" className="form-select rounded-pill" onChange={handleChange}>
                                         <option value="available">Disponible</option>
                                         <option value="under construction">Sous-travaux</option>
                                         <option value="occupied">Occupé</option>
@@ -140,15 +150,19 @@ const Modify = ({ logement: logementProp }) => {
                             </div>
 
                             <div className="d-grid gap-2 mt-4">
-                                <button type="submit" className="btn btn-primary btn-lg">
-                                    Ajouter
+                                <button 
+                                    type="submit" 
+                                    className="btn btn-warning btn-lg rounded-pill shadow-sm"
+                                    style={{ transition: "0.3s ease" }}
+                                >
+                                    Modifier
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 };
 
