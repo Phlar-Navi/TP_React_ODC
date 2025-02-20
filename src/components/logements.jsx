@@ -160,9 +160,10 @@ export default function Logements() {
     return (
         <>
             <div className="container mt-4">
-                <div className="alert alert-success fw-bold text-center">
+                <div className="alert alert-success fw-bold text-center pt-5">
                     Prix Total : {totalPrice} €
                 </div>
+
 
                 <div className="row">
                     {!dataLoaded ? (
