@@ -132,7 +132,7 @@ export default function Logements() {
             axios.get("https://real-estate-api-64hf.onrender.com/api/properties")
             .then((res) => {
                 console.log(res.data, typeof res.data);
-                if (typeof res.data == "object" && res.data?.length > 0){
+                if (typeof res.data == "object" && res.data?.length >= 0){
                     setTimeout(() => {
                         setlisteLogements(res.data);
                         setDataLoaded(true);
